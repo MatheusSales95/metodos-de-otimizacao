@@ -1,0 +1,55 @@
+\section{Metodologia}
+\label{sec:metodologia}
+
+\subsection{Função objetivo}
+
+Cada passagem $i$ é representada pelo polígono $P_i$ de sua faixa imageada no solo, e $A$ denota a união das áreas de interesse. Para uma solução $\mathbf{x} \in \{0,1\}^N$, em que $x_i = 1$ indica que a passagem $i$ foi selecionada, sejam
+\begin{align}
+U(\mathbf{x}) &= \Bigl|\, \bigcup_{i:\,x_i = 1} (P_i \cap A) \Bigr|, \\
+S(\mathbf{x}) &= \sum_{i=1}^{N} x_i \, |P_i \cap A|,
+\end{align}
+em que $|\cdot|$ denota área: $U$ é a área efetivamente coberta, e $S$ soma a área coberta por cada passagem, contando as repetições. A aptidão combina três critérios normalizados em $[0,1]$:
+\begin{align}
+\mathrm{AC}(\mathbf{x}) &= \frac{U(\mathbf{x})}{|A|}, \label{eq:ac} \\
+\mathrm{NP}(\mathbf{x}) &= \frac{1}{N} \sum_{i=1}^{N} x_i, \label{eq:np} \\
+\mathrm{SO}(\mathbf{x}) &= \frac{S(\mathbf{x}) - U(\mathbf{x})}{S(\mathbf{x}) + U(\mathbf{x})}, \label{eq:so}
+\end{align}
+que são, respectivamente, a fração da área de interesse coberta, a fração das passagens selecionadas e a sobreposição entre faixas, nula quando nenhum ponto é imageado mais de uma vez. A função objetivo, a ser maximizada, é
+\begin{equation}
+f(\mathbf{x}) = w_1\,\mathrm{AC}(\mathbf{x}) - w_2\,\mathrm{NP}(\mathbf{x}) - w_3\,\mathrm{SO}(\mathbf{x}),
+\label{eq:objetivo}
+\end{equation}
+com os pesos definidos em aula, $w_1 = 1,0$, $w_2 = 1,5$ e $w_3 = 0,5$. Os critérios são conflitantes: acrescentar passagens aumenta AC, mas também NP e, em geral, SO.
+
+\subsection{Parâmetros e testes comparativos}
+
+\begin{table}[!t]
+\caption{Configuração dos experimentos}
+\label{tab:parametros}
+\centering
+\footnotesize
+\begin{tabular}{@{}ll@{}}
+\toprule
+Parâmetro & Valor \\
+\midrule
+\multicolumn{2}{@{}l}{\textit{Configuração base}} \\
+Tamanho da população ($M$) & 50 \\
+Gerações & 40 \\
+Execuções por cenário & 1 \\
+Seleção & torneio ($k = 3$) \\
+Taxa de cruzamento ($p_c$) & 0,8 \\
+Taxa de mutação ($p_m$) & 0,01 \\
+Elitismo & sim (1 indivíduo) \\
+\midrule
+\multicolumn{2}{@{}l}{\textit{Testes comparativos}} \\
+(a) Seleção & roleta, torneio, ranking \\
+(b) $p_c$, com $p_m = 0,01$ & 0,6; 0,8; 0,9 \\
+(b) $p_m$, com $p_c = 0,8$ & 0,005; 0,01; 0,15 \\
+(c) Elitismo & com, sem \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+A Tabela~\ref{tab:parametros} resume a configuração. Cada teste parte da configuração base e varia um único fator: (a)~o método de seleção; (b)~a taxa de cruzamento ou a de mutação; e (c)~a presença de elitismo. Com $N = 702$, as taxas de mutação testadas alteram em média 3,5, 7 e 105 genes por indivíduo, contra a referência de um gene ($p_m = 1/N$). Cada cenário foi executado uma vez, com 40 gerações de 50 indivíduos (2.000 avaliações), em Python com GeoPandas e Shapely, no Google Colab. As áreas são obtidas por interseção e união de polígonos, operações que dominam o custo computacional.
+
+Em cada geração, registram-se a melhor aptidão da população e a aptidão média dos $M$ indivíduos, que formam as curvas de convergência, além de AC, NP e SO da melhor solução encontrada.

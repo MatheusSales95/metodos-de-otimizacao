@@ -1,0 +1,36 @@
+\section{Algoritmo Genético}
+\label{sec:algoritmo}
+
+Cada indivíduo é um vetor $\mathbf{x} \in \{0,1\}^N$, com um gene por passagem, e sua aptidão é o valor da função objetivo $f$, definida na Seção~\ref{sec:metodologia}~\cite{holland1975,goldberg1989}. A população inicial, de tamanho $M$, é sorteada com probabilidade 0,5 por gene. A cada geração, a população é substituída integralmente por filhos gerados por seleção, cruzamento e mutação; com elitismo, o melhor indivíduo é mantido sem alterações.
+
+A seleção define a \emph{pressão de seleção}, isto é, o quanto os indivíduos mais aptos são favorecidos: pressão alta acelera a convergência, mas reduz a diversidade e aumenta o risco de convergência prematura~\cite{goldberg1991,blickle1996}. Na roleta, a probabilidade de seleção é proporcional à aptidão, transladada pelo mínimo da população porque $f$ pode ser negativa:
+\begin{equation}
+p_i = \frac{f_i - f_{\min}}{\sum_{j=1}^{M} (f_j - f_{\min})}.
+\label{eq:roleta}
+\end{equation}
+No ranking linear~\cite{baker1985}, ela depende apenas da posição $r_i$ do indivíduo na ordenação crescente de aptidão:
+\begin{equation}
+p_i = \frac{2\,r_i}{M(M+1)}.
+\label{eq:ranking}
+\end{equation}
+No torneio, sorteiam-se $k = 3$ indivíduos e vence o mais apto. Como mostra a Tabela~\ref{tab:selecao}, ranking e torneio dependem só da ordem dos indivíduos e têm pressão constante, maior no torneio, enquanto na roleta a pressão varia com a distribuição das aptidões na população. Espera-se, portanto, que o torneio convirja mais rápido que o ranking e que o desempenho da roleta dependa do estado da população.
+
+\begin{table}[!t]
+\caption{Pressão de seleção dos três métodos}
+\label{tab:selecao}
+\centering
+\footnotesize
+\begin{tabular}{@{}lcc@{}}
+\toprule
+Método & Depende de & \begin{tabular}[c]{@{}c@{}}Cópias esperadas\\do melhor\end{tabular} \\
+\midrule
+Roleta & valores de $f$ & $\dfrac{f_{\max} - f_{\min}}{\bar{f} - f_{\min}}$ \\[2.5ex]
+Ranking linear & ordem & $\dfrac{2M}{M+1} \approx 2$ \\[2ex]
+Torneio ($k = 3$) & ordem & 3 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+O cruzamento é de um ponto, com corte fixo na metade do cromossomo, e é aplicado a cada par de pais com probabilidade $p_c$; caso contrário, os filhos são cópias dos pais. Em seguida, cada gene é invertido com probabilidade $p_m$, o que altera em média $p_m N$ genes por indivíduo. Assim, $p_c$ regula quanto da nova geração vem de recombinação, e $p_m$, quanta perturbação é introduzida: com $p_m$ alto, a herança dos pais se perde e a busca se aproxima de uma amostragem aleatória. Um valor de referência usual é $p_m \approx 1/N$~\cite{eiben2015}.
+
+Como a substituição é geracional, o melhor indivíduo pode ser destruído por cruzamento ou mutação. O elitismo~\cite{dejong1975} evita essa perda copiando-o para a geração seguinte, de modo que a melhor aptidão da população nunca diminui; sem ele, o AG canônico não converge em probabilidade para o ótimo global~\cite{rudolph1994}.

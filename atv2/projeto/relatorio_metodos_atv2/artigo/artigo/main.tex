@@ -1,0 +1,41 @@
+\documentclass[conference]{IEEEtran}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[brazilian]{babel}
+\usepackage{icomma}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{cite}
+\usepackage{url}
+
+\graphicspath{{figuras/}}
+
+\renewcommand{\IEEEkeywordsname}{Palavras-chave}
+\addto\captionsbrazilian{\renewcommand{\figurename}{Fig.}\renewcommand{\tablename}{TABELA}}
+
+\begin{document}
+
+\title{Algoritmo Genético para Seleção de Passagens SAR: Comparação de Métodos de Seleção, Taxas e Elitismo}
+
+\author{
+\IEEEauthorblockN{Matheus V. M. Sales e William M. S. S. Silva}
+\IEEEauthorblockA{Instituto Nacional de Pesquisas Espaciais (INPE)\\
+São José dos Campos, SP, Brasil\\
+\{matheus.sales, william.silva\}@inpe.br}
+}
+
+\maketitle
+\suppressfloats[t]
+
+\input{secoes/00_resumo}
+\input{secoes/01_introducao}
+\input{secoes/02_algoritmo}
+\input{secoes/03_metodologia}
+\input{secoes/04_resultados}
+
+\bibliographystyle{IEEEtran}
+\bibliography{referencias}
+
+\end{document}
